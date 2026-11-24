@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # DoucuMind - RAG Document Chatbot
 
 DoucuMind is a high-performance, 100% free-tier RAG (Retrieval-Augmented Generation) document chatbot built with **Node.js, Express, LangChain.js, and Google Gemini**. It enables users to upload multi-format documents (PDF, DOCX, CSV, TXT) and interactively query them with strict, hallucination-free answers backed by exact source citations and page numbers.
@@ -205,3 +206,6 @@ Healthcheck endpoint returning server status, API key status, and active model n
    Each client receives a unique session ID (`x-session-id`) stored in browser storage. Separate browser sessions have independent memory stores without cross-talk.
 5. **Temp File Cleanup:**
    Multer temporarily writes files to `uploads/`. After indexing succeeds or fails, the temporary file is deleted in a `finally` block to prevent disk clutter.
+=======
+# DocuMind
+>>>>>>> 9443aece57c39b24e9bdae8c91d0e75777a52379
