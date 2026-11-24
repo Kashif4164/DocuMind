@@ -1,0 +1,201 @@
+/* DoucuMind Core Theme & Styling */
+:root {
+  --font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --code-font: 'Fira Code', monospace;
+  --sidebar-width: 320px;
+  --user-bubble-bg: #0d6efd;
+  --user-bubble-color: #ffffff;
+  --ai-bubble-bg: #f8f9fa;
+  --ai-bubble-border: #e9ecef;
+}
+
+[data-bs-theme="dark"] {
+  --user-bubble-bg: #0d6efd;
+  --user-bubble-color: #ffffff;
+  --ai-bubble-bg: #212529;
+  --ai-bubble-border: #343a40;
+}
+
+body {
+  font-family: var(--font-family);
+  user-select: auto;
+}
+
+/* Custom sizes */
+.xx-small {
+  font-size: 0.75rem;
+}
+
+.cursor-pointer {
+  cursor: pointer;
+}
+
+/* Navbar */
+.brand-icon {
+  width: 34px;
+  height: 34px;
+  font-size: 1.1rem;
+}
+
+/* Sidebar */
+.sidebar-panel {
+  width: var(--sidebar-width);
+  min-width: var(--sidebar-width);
+}
+
+/* Dropzone */
+.dropzone {
+  background-color: var(--bs-body-bg);
+  border-color: var(--bs-border-color) !important;
+  transition: all 0.2s ease-in-out;
+  cursor: pointer;
+}
+
+.dropzone:hover,
+.dropzone.dragover {
+  border-color: var(--bs-primary) !important;
+  background-color: var(--bs-primary-bg-subtle);
+}
+
+/* Avatars */
+.avatar-sm {
+  width: 32px;
+  height: 32px;
+  font-size: 0.85rem;
+  flex-shrink: 0;
+}
+
+.avatar-lg {
+  width: 64px;
+  height: 64px;
+}
+
+/* Chat Message Bubbles */
+.message-row {
+  display: flex;
+  margin-bottom: 1.25rem;
+  gap: 0.75rem;
+  animation: fadeIn 0.25s ease-in-out;
+}
+
+.message-row.user {
+  justify-content: flex-end;
+}
+
+.message-row.ai {
+  justify-content: flex-start;
+}
+
+.bubble-user {
+  background-color: var(--user-bubble-bg);
+  color: var(--user-bubble-color);
+  border-radius: 1.25rem 1.25rem 0.25rem 1.25rem;
+  padding: 0.75rem 1rem;
+  max-width: 80%;
+  word-break: break-word;
+  white-space: pre-wrap;
+  font-size: 0.95rem;
+}
+
+.bubble-ai {
+  background-color: var(--ai-bubble-bg);
+  border: 1px solid var(--ai-bubble-border);
+  border-radius: 1.25rem 1.25rem 1.25rem 0.25rem;
+  padding: 1rem 1.25rem;
+  max-width: 85%;
+  word-break: break-word;
+  font-size: 0.95rem;
+}
+
+.bubble-ai p:last-child {
+  margin-bottom: 0;
+}
+
+.bubble-ai pre {
+  background-color: var(--bs-dark-bg-subtle);
+  padding: 0.75rem;
+  border-radius: 0.5rem;
+  overflow-x: auto;
+  font-family: var(--code-font);
+  font-size: 0.85rem;
+}
+
+.bubble-ai code {
+  font-family: var(--code-font);
+  font-size: 0.875em;
+}
+
+/* Sources Accordion / Badge */
+.sources-card {
+  margin-top: 0.75rem;
+  border-radius: 0.5rem;
+  font-size: 0.825rem;
+}
+
+.source-snippet {
+  border-left: 3px solid var(--bs-primary);
+  padding-left: 0.5rem;
+  font-style: italic;
+  color: var(--bs-secondary-color);
+}
+
+/* Typing Dots Animation */
+.typing-dots {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  height: 18px;
+}
+
+.typing-dots span {
+  width: 7px;
+  height: 7px;
+  background-color: var(--bs-secondary);
+  border-radius: 50%;
+  animation: typingBounce 1.4s infinite ease-in-out both;
+}
+
+.typing-dots span:nth-child(1) {
+  animation-delay: -0.32s;
+}
+
+.typing-dots span:nth-child(2) {
+  animation-delay: -0.16s;
+}
+
+@keyframes typingBounce {
+  0%, 80%, 100% {
+    transform: scale(0);
+    opacity: 0.4;
+  }
+  40% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Document cards in sidebar */
+.doc-item {
+  border-radius: 0.5rem;
+  transition: background-color 0.15s ease-in-out;
+}
+
+.doc-item:hover {
+  background-color: var(--bs-secondary-bg);
+}
+
+.doc-icon-pdf { color: #dc3545; }
+.doc-icon-docx { color: #0d6efd; }
+.doc-icon-csv { color: #198754; }
+.doc-icon-txt { color: #6c757d; }

@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en" data-bs-theme="light">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>DoucuMind - RAG Document Chatbot</title>
+  
+  <!-- Bootstrap 5.3 CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <!-- Bootstrap Icons -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" />
+  <!-- Google Fonts: Inter -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+  
+  <!-- Custom Styles -->
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body class="d-flex flex-column vh-100 overflow-hidden">
+
+  <!-- Navbar -->
+  <nav class="navbar navbar-expand-lg border-bottom px-3 py-2 bg-body-tertiary flex-shrink-0">
+    <div class="container-fluid p-0">
+      <div class="d-flex align-items-center gap-2">
+        <!-- Offcanvas toggle for mobile -->
+        <button class="btn btn-outline-secondary d-lg-none btn-sm" type="button" data-bs-toggle="offcanvas" data-bs-target="#sidebarOffcanvas" aria-controls="sidebarOffcanvas">
+          <i class="bi bi-layout-sidebar-inset"></i>
+        </button>
+        <span class="brand-icon d-flex align-items-center justify-content-center bg-primary text-white rounded-3 shadow-sm">
+          <i class="bi bi-file-earmark-text-fill"></i>
+        </span>
+        <div>
+          <span class="navbar-brand fw-bold mb-0 lh-1">DoucuMind</span>
+          <span class="badge bg-primary-subtle text-primary border border-primary-subtle ms-1 d-none d-sm-inline-block">RAG Chatbot</span>
+        </div>
+      </div>
+
+      <!-- Center status pill -->
+      <div class="d-none d-md-flex align-items-center gap-2">
+        <span id="apiStatusBadge" class="badge bg-secondary-subtle text-secondary border d-flex align-items-center gap-1">
+          <span class="spinner-grow spinner-grow-sm" role="status" style="width: 8px; height: 8px;"></span> Checking status...
+        </span>
+        <span id="docCountBadge" class="badge bg-light-subtle text-body border">0 docs / 0 chunks</span>
+      </div>
+
+      <!-- Right actions -->
+      <div class="d-flex align-items-center gap-2">
+        <button id="clearChatBtn" class="btn btn-outline-danger btn-sm d-flex align-items-center gap-1" title="Clear Chat History">
+          <i class="bi bi-trash3"></i>
+          <span class="d-none d-md-inline">Clear Chat</span>
+        </button>
+        <button id="themeToggleBtn" class="btn btn-outline-secondary btn-sm" title="Toggle Dark/Light Mode">
+          <i id="themeIcon" class="bi bi-moon-stars-fill"></i>
+        </button>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Main Body Wrapper -->
+  <div class="d-flex flex-grow-1 overflow-hidden">
+    
+    <!-- Sidebar for Desktop & Offcanvas for Mobile -->
+    <div class="offcanvas-lg offcanvas-start border-end d-flex flex-column bg-body-tertiary sidebar-panel" tabindex="-1" id="sidebarOffcanvas">
+      
+      <!-- Offcanvas Header for mobile -->
+      <div class="offcanvas-header border-bottom d-lg-none py-2 px-3">
+        <h6 class="offcanvas-title fw-bold">Document Manager</h6>
+        <button type="button" class="btn-close" data-bs-dismiss="offcanvas" data-bs-target="#sidebarOffcanvas" aria-label="Close"></button>
+      </div>
+
+      <!-- Sidebar Content -->
+      <div class="p-3 d-flex flex-column h-100 overflow-y-auto">
+        <!-- Upload Box -->
+        <div class="mb-3">
+          <label class="form-label fw-semibold small text-uppercase text-secondary mb-2">
+            <i class="bi bi-cloud-arrow-up me-1"></i> Ingest Document
+          </label>
+          <div id="dropZone" class="dropzone p-3 text-center rounded-3 border border-2 border-dashed">
+            <input type="file" id="fileInput" class="d-none" accept=".pdf,.docx,.csv,.txt" />
+            <i class="bi bi-cloud-arrow-up-fill fs-2 text-primary mb-2 d-block"></i>
+            <p class="mb-1 fw-medium small">Drag & drop or <span class="text-primary text-decoration-underline cursor-pointer">browse</span></p>
+            <p class="text-secondary xx-small mb-2">Supported: PDF, DOCX, CSV, TXT (Max 10MB)</p>
+            <button id="browseBtn" class="btn btn-primary btn-sm px-3 shadow-sm" type="button">
+              <i class="bi bi-folder2-open me-1"></i> Choose File
+            </button>
+          </div>
+
+          <!-- Upload Progress / Status -->
+          <div id="uploadStatus" class="mt-2 d-none">
+            <div class="d-flex justify-content-between align-items-center mb-1">
+              <span id="uploadStatusText" class="xx-small fw-semibold text-secondary">Uploading & ingesting...</span>
+              <span id="uploadPercent" class="xx-small fw-bold text-primary"></span>
+            </div>
+            <div class="progress" style="height: 6px;">
+              <div id="uploadProgressBar" class="progress-bar progress-bar-striped progress-bar-animated bg-primary" style="width: 100%"></div>
+            </div>
+          </div>
+        </div>
+
+        <hr class="my-2 opacity-50" />
+
+        <!-- Documents List -->
+        <div class="d-flex justify-content-between align-items-center mb-2">
+          <span class="fw-semibold small text-uppercase text-secondary">
+            <i class="bi bi-files me-1"></i> Knowledge Base (<span id="sidebarDocCount">0</span>)
+          </span>
+          <button id="clearAllDocsBtn" class="btn btn-link text-danger text-decoration-none p-0 xx-small" title="Delete all documents" style="display: none;">
+            Clear All
+          </button>
+        </div>
+
+        <div id="docsList" class="flex-grow-1 overflow-y-auto pe-1">
+          <div id="emptyDocsPlaceholder" class="text-center py-4 text-secondary">
+            <i class="bi bi-folder-x fs-1 opacity-50 d-block mb-1"></i>
+            <span class="small">No documents uploaded yet.</span>
+          </div>
+        </div>
+
+        <!-- Footer / API Info in Sidebar -->
+        <div class="pt-3 border-top mt-auto">
+          <div class="p-2 rounded bg-body-secondary small">
+            <div class="d-flex align-items-center justify-content-between mb-1">
+              <span class="fw-medium text-secondary xx-small">Vector Store:</span>
+              <span class="badge bg-success-subtle text-success">Memory Store</span>
+            </div>
+            <div class="d-flex align-items-center justify-content-between">
+              <span class="fw-medium text-secondary xx-small">Retriever:</span>
+              <span class="text-body xx-small">Top-4 Cosine Similarity</span>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- Main Chat Container -->
+    <div class="flex-grow-1 d-flex flex-column h-100 overflow-hidden bg-body">
+
+      <!-- Messages Area -->
+      <div id="chatMessages" class="flex-grow-1 p-3 p-md-4 overflow-y-auto">
+        <!-- Welcome Prompt -->
+        <div id="welcomeScreen" class="text-center py-5 mx-auto" style="max-width: 620px;">
+          <div class="avatar-lg bg-primary-subtle text-primary rounded-circle mx-auto d-flex align-items-center justify-content-center mb-3 shadow-sm">
+            <i class="bi bi-robot fs-1"></i>
+          </div>
+          <h4 class="fw-bold mb-2">Welcome to DoucuMind</h4>
+          <p class="text-secondary small mb-4">
+            Upload your PDF, DOCX, CSV, or TXT documents on the left. DoucuMind indexes and extracts exact chunks to give you strictly grounded, hallucination-free answers with precise source citations.
+          </p>
+
+          <div class="card border bg-body-tertiary text-start shadow-sm mb-4">
+            <div class="card-body p-3">
+              <div class="fw-semibold small mb-2 text-secondary">
+                <i class="bi bi-lightbulb-fill text-warning me-1"></i> Try asking once you upload documents:
+              </div>
+              <div class="d-flex flex-wrap gap-2">
+                <button class="btn btn-outline-secondary btn-sm sample-query-btn">
+                  "Summarize the key points in this document"
+                </button>
+                <button class="btn btn-outline-secondary btn-sm sample-query-btn">
+                  "What are the main findings or numbers mentioned?"
+                </button>
+                <button class="btn btn-outline-secondary btn-sm sample-query-btn">
+                  "List any action items or recommendations"
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Typing Indicator Bubble (hidden by default) -->
+      <div id="typingIndicator" class="px-4 py-2 d-none">
+        <div class="d-flex align-items-center gap-2">
+          <div class="avatar-sm bg-primary text-white rounded-circle d-flex align-items-center justify-content-center">
+            <i class="bi bi-robot"></i>
+          </div>
+          <div class="bubble-ai p-3 rounded-4 shadow-sm">
+            <div class="typing-dots">
+              <span></span>
+              <span></span>
+              <span></span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Sticky Input Bar -->
+      <div class="p-3 border-top bg-body-tertiary flex-shrink-0">
+        <form id="chatForm" class="d-flex gap-2 align-items-end mx-auto" style="max-width: 900px;">
+          <div class="flex-grow-1 position-relative">
+            <textarea
+              id="queryInput"
+              class="form-control rounded-4 shadow-sm"
+              rows="1"
+              placeholder="Ask anything about your uploaded documents... (Shift+Enter for new line)"
+              style="resize: none; max-height: 140px; padding-right: 40px;"
+            ></textarea>
+          </div>
+          <button id="sendBtn" type="submit" class="btn btn-primary rounded-circle d-flex align-items-center justify-content-center shadow-sm flex-shrink-0" style="width: 44px; height: 44px;" title="Send question">
+            <i class="bi bi-send-fill"></i>
+          </button>
+        </form>
+        <div class="text-center mt-2 text-secondary xx-small">
+          DoucuMind answers strictly from retrieved context chunks • Memory store resets on server restart
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Toast Container -->
+  <div class="toast-container position-fixed bottom-0 end-0 p-3" style="z-index: 1090;">
+    <div id="liveToast" class="toast align-items-center border-0 shadow" role="alert" aria-live="assertive" aria-atomic="true">
+      <div class="d-flex">
+        <div class="toast-body d-flex align-items-center gap-2" id="toastMessage">
+          <!-- Toast message here -->
+        </div>
+        <button type="button" class="btn-close me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Bootstrap 5.3 JS Bundle -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <!-- App JS -->
+  <script src="js/app.js"></script>
+</body>
+</html>
