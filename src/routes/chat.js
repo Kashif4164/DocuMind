@@ -37,8 +37,18 @@ router.post('/chat/reset-limit', (req, res) => {
  */
 router.post('/chat', rateLimiterMiddleware, async (req, res, next) => {
   try {
-    const rawQuery = req.body.query || req.body.question || req.body.message || '';
-    const { history = [], sessionId } = req.body;
+    let body = req.body;
+    if (typeof body === 'string') {
+      try {
+        body = JSON.parse(body);
+      } catch (e) {
+        body = {};
+      }
+    }
+    body = body || {};
+    const rawQuery = body.query || body.question || body.message || req.query?.query || req.query?.question || '';
+    const history = body.history || [];
+    const sessionId = body.sessionId || req.query?.sessionId;
 
     // Validate query
     if (!rawQuery || typeof rawQuery !== 'string' || !rawQuery.trim()) {

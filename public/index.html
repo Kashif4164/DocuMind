@@ -89,31 +89,31 @@
 
       <!-- Chat Scroll Viewport (Full Width, No Gap on Right) -->
       <div id="chatScrollArea" class="chat-scroll-area flex-grow-1 w-100 overflow-y-auto">
-        <div id="chatMessages" class="claude-messages-container p-3 p-md-4 mx-auto">
+        <div id="chatMessages" class="claude-messages-container px-3 px-md-4 py-2 mx-auto">
         
           <!-- Claude-Style Center Hero (Visible when chat is empty) -->
-          <div id="claudeHero" class="claude-hero text-center mx-auto my-auto py-4">
-            <div class="claude-hero-logo mb-3">
+          <div id="claudeHero" class="claude-hero text-center mx-auto my-auto py-2">
+            <div class="claude-hero-logo mb-2">
               <img src="images/logo.png" alt="Documind Logo" class="hero-logo-img" />
             </div>
-            <h1 class="claude-hero-title mb-3">What shall we think through?</h1>
-            <p class="claude-hero-subtitle text-secondary mb-4 mx-auto" style="max-width: 520px;">
+            <h1 class="claude-hero-title mb-2">What shall we think through?</h1>
+            <p class="claude-hero-subtitle text-secondary mb-3 mx-auto" style="max-width: 520px;">
               Upload your resumes, contracts, or research documents. Ask specific questions with grounded citations.
             </p>
 
             <!-- Drag and Drop Target Card -->
-            <div id="dropZone" class="claude-dropzone p-4 rounded-4 mx-auto mb-4 text-center">
+            <div id="dropZone" class="claude-dropzone p-3 rounded-4 mx-auto mb-2 text-center">
               <input type="file" id="fileInput" class="d-none" accept=".pdf,.docx,.csv,.txt" />
-              <i class="bi bi-file-earmark-arrow-up fs-2 text-terracotta mb-2 d-block"></i>
-              <div class="fw-semibold mb-1">Drop documents here to index</div>
-              <div class="text-secondary xx-small mb-3">PDF, DOCX, CSV, TXT &middot; Up to 10MB &middot; Keyless local embeddings</div>
-              <button id="browseBtn" class="btn btn-claude-primary btn-sm px-4 py-2" type="button">
+              <i class="bi bi-file-earmark-arrow-up fs-3 text-terracotta mb-1 d-block"></i>
+              <div class="fw-semibold mb-1 small">Drop documents here to index</div>
+              <div class="text-secondary xx-small mb-2">PDF, DOCX, CSV, TXT &middot; Up to 10MB &middot; Keyless local embeddings</div>
+              <button id="browseBtn" class="btn btn-claude-primary btn-sm px-3 py-1" type="button">
                 <i class="bi bi-upload me-1"></i> Choose Document
               </button>
             </div>
 
             <!-- Upload Progress Box -->
-            <div id="uploadStatus" class="upload-progress-box mx-auto p-3 rounded-3 d-none mb-3" style="max-width: 440px;">
+            <div id="uploadStatus" class="upload-progress-box mx-auto p-3 rounded-3 d-none mb-2" style="max-width: 420px;">
               <div class="d-flex justify-content-between align-items-center mb-1">
                 <span id="uploadStatusText" class="xx-small fw-semibold">Ingesting document...</span>
                 <span class="xx-small text-terracotta fw-bold">Embedding locally</span>
@@ -137,7 +137,7 @@
       </div>
 
       <!-- Bottom Floating Prompt Box (Clean & Minimal for Free Version) -->
-      <div class="claude-input-container p-3 p-md-4 flex-shrink-0">
+      <div class="claude-input-container p-2 px-md-4 pb-3 flex-shrink-0">
         <div class="claude-input-wrapper mx-auto">
           
           <!-- Suggestion Chips -->
@@ -154,7 +154,7 @@
           </div>
 
           <!-- Floating Prompt Card -->
-          <form id="chatForm" class="claude-prompt-card p-3 rounded-4 d-flex flex-column">
+          <form id="chatForm" class="claude-prompt-card p-2 px-3 rounded-4 d-flex flex-column">
             <textarea
               id="queryInput"
               class="form-control claude-textarea border-0"

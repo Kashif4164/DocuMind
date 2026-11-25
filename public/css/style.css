@@ -124,8 +124,8 @@ body.claude-body {
 }
 
 .hero-logo-img {
-  height: 80px; /* Big centerpiece hero logo */
-  max-width: 340px;
+  height: 48px; /* Compact centerpiece hero logo */
+  max-width: 240px;
   width: auto;
   object-fit: contain;
   filter: brightness(1.18) contrast(1.1);
@@ -369,22 +369,24 @@ body.claude-body {
    ========================================================================== */
 
 .claude-hero {
-  max-width: 720px;
+  max-width: 640px;
+  margin: auto auto;
+  padding: 0.5rem 1rem;
   transition: opacity 0.3s ease;
 }
 
 .claude-hero-title {
   font-family: var(--claude-font-serif);
   font-weight: 500;
-  font-size: 2.75rem; /* ~44px */
+  font-size: 2.1rem; /* ~33.6px - fits comfortably on laptops without scrolling */
   letter-spacing: -0.02em;
   color: var(--claude-text);
   line-height: 1.25;
 }
 
 .claude-hero-subtitle {
-  font-size: 1.125rem; /* 18px */
-  line-height: 1.6;
+  font-size: 0.95rem; /* ~15.2px */
+  line-height: 1.45;
   color: var(--claude-text-muted) !important;
 }
 
@@ -392,7 +394,7 @@ body.claude-body {
 .claude-dropzone {
   background-color: var(--claude-card);
   border: 1.5px dashed var(--claude-card-border);
-  max-width: 480px;
+  max-width: 420px;
   cursor: pointer;
   transition: all 0.2s ease;
 }
@@ -442,6 +444,9 @@ body.claude-body {
   max-width: 860px;
   width: 100%;
   margin: 0 auto;
+  min-height: 100%;
+  display: flex;
+  flex-direction: column;
 }
 
 .user-msg-row {
