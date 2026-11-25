@@ -1,139 +1,261 @@
 /* ==========================================================================
-   DocuMind - Editorial Minimalist Theme (Matches Reference Design)
+   DocuMind - Brand Identity Theme (Matches Logo: Vibrant Emerald Green)
+   High-contrast, generous readable typography, dark slate-charcoal aesthetic.
    ========================================================================== */
 
 :root {
-  --app-bg: #edf3ee;
-  --card-bg: #ffffff;
-  --card-border: #e2eae1;
-  --primary-green: #0f6b41;
-  --primary-green-hover: #0c5734;
-  --dashed-border: #7bc49b;
-  --dashed-bg: #f8faf8;
-  --user-bubble-bg: #0f6b41;
-  --user-bubble-text: #ffffff;
-  --ai-bubble-bg: #f4f6f4;
-  --ai-bubble-text: #1f2937;
-  --sidebar-bg: #f6f8f6;
-  --sidebar-border: #e3ebe2;
-  --font-serif: 'Newsreader', Georgia, serif;
-  --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  /* DocuMind Emerald Green Brand Colors (Derived directly from Logo) */
+  --brand-green: #107c41;
+  --brand-green-hover: #169b52;
+  --brand-green-active: #0c6133;
+  --brand-green-subtle: rgba(16, 124, 65, 0.16);
+  --brand-green-border: rgba(16, 124, 65, 0.38);
+  --brand-green-glow: rgba(16, 124, 65, 0.25);
+
+  /* Dark Theme Palette (Slate & Forest Charcoal) */
+  --claude-bg: #101311;
+  --claude-sidebar: #0b0e0c;
+  --claude-sidebar-border: #1d2420;
+  --claude-card: #161b18;
+  --claude-card-border: #242c26;
+  --claude-hover: #1e2521;
+  --claude-accent: var(--brand-green);
+  --claude-accent-hover: var(--brand-green-hover);
+  --claude-text: #f0f4f1;
+  --claude-text-muted: #95a399;
+  --claude-user-bubble: #1a221d;
+  --claude-ai-bg: #141815;
+  --claude-font-serif: 'Newsreader', Georgia, serif;
+  --claude-font-sans: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
 }
 
-[data-bs-theme="dark"] {
-  --app-bg: #141715;
-  --card-bg: #1d211e;
-  --card-border: #2c332e;
-  --primary-green: #1a8755;
-  --primary-green-hover: #1f9e64;
-  --dashed-border: #385e49;
-  --dashed-bg: #191e1b;
-  --user-bubble-bg: #1a8755;
-  --user-bubble-text: #ffffff;
-  --ai-bubble-bg: #262c28;
-  --ai-bubble-text: #e5e7eb;
-  --sidebar-bg: #181c19;
-  --sidebar-border: #28302a;
+[data-bs-theme="light"] {
+  --claude-bg: #f5f8f6;
+  --claude-sidebar: #edf2ee;
+  --claude-sidebar-border: #dbe4dc;
+  --claude-card: #ffffff;
+  --claude-card-border: #dbe4dc;
+  --claude-hover: #e4ede6;
+  --claude-accent: #0f764a;
+  --claude-accent-hover: #0c613d;
+  --claude-text: #131a15;
+  --claude-text-muted: #5e6d63;
+  --claude-user-bubble: #e8f1eb;
+  --claude-ai-bg: #ffffff;
 }
 
-body.app-body {
+[data-bs-theme="neutral"] {
+  --brand-green: #22c55e;
+  --brand-green-hover: #16a34a;
+  --brand-green-active: #15803d;
+  --brand-green-subtle: rgba(34, 197, 94, 0.16);
+  --brand-green-border: rgba(34, 197, 94, 0.38);
+  --brand-green-glow: rgba(34, 197, 94, 0.25);
+  --claude-bg: #141417;
+  --claude-sidebar: #0f0f11;
+  --claude-sidebar-border: #232328;
+  --claude-card: #1c1c20;
+  --claude-card-border: #2b2b32;
+  --claude-hover: #26262c;
+  --claude-accent: #22c55e;
+  --claude-accent-hover: #16a34a;
+  --claude-text: #f4f4f6;
+  --claude-text-muted: #9e9ea8;
+  --claude-user-bubble: #232328;
+  --claude-ai-bg: #18181c;
+}
+
+body.claude-body {
   margin: 0;
   padding: 0;
-  background-color: var(--app-bg);
-  font-family: var(--font-sans);
-  color: var(--bs-body-color);
+  background-color: var(--claude-bg);
+  color: var(--claude-text);
+  font-family: var(--claude-font-sans);
+  font-size: 16px; /* Generous, accessible base font */
+  line-height: 1.6;
   -webkit-font-smoothing: antialiased;
+  overflow: hidden;
 }
 
+/* High-Legibility Utility Classes */
+.text-terracotta,
+.text-brand {
+  color: var(--claude-accent) !important;
+}
+
+.bg-terracotta,
+.bg-brand {
+  background-color: var(--claude-accent) !important;
+}
+
+/* Upgraded from 12px (0.75rem) to a crisp, readable 13.5px */
 .xx-small {
-  font-size: 0.75rem;
+  font-size: 0.85rem !important;
+}
+
+.small {
+  font-size: 0.925rem !important;
+}
+
+.cursor-pointer {
+  cursor: pointer;
+}
+
+.tracking-wider {
+  letter-spacing: 0.06em;
+}
+
+/* Brand Logo (Big, Crisp, Prominent) */
+.brand-logo-img {
+  height: 38px; /* Prominently sized for sidebar */
+  max-width: 175px;
+  width: auto;
+  object-fit: contain;
+  transition: opacity 0.15s ease, filter 0.15s ease;
+  filter: brightness(1.15) contrast(1.1);
+}
+
+.brand-logo-img:hover {
+  opacity: 0.92;
+}
+
+.claude-hero-logo {
+  line-height: 1;
+}
+
+.hero-logo-img {
+  height: 80px; /* Big centerpiece hero logo */
+  max-width: 340px;
+  width: auto;
+  object-fit: contain;
+  filter: brightness(1.18) contrast(1.1);
+  transition: transform 0.2s ease;
+}
+
+.hero-logo-img:hover {
+  transform: scale(1.02);
+}
+
+[data-bs-theme="light"] .brand-logo-img,
+[data-bs-theme="light"] .hero-logo-img {
+  filter: none;
 }
 
 /* ==========================================================================
-   History Sidebar (ChatGPT / Claude Style)
+   Left History Sidebar (Modern, Wide & Highly Readable)
    ========================================================================== */
 
-.history-sidebar {
-  width: 260px;
-  min-width: 260px;
-  max-width: 260px;
-  background-color: var(--sidebar-bg);
-  border-color: var(--sidebar-border) !important;
-  transition: all 0.25s ease-in-out;
+.claude-sidebar {
+  width: 280px; /* Slightly wider for comfortable reading and bigger logo */
+  min-width: 280px;
+  max-width: 280px;
+  background-color: var(--claude-sidebar);
+  border-color: var(--claude-sidebar-border) !important;
+  transition: margin-left 0.25s cubic-bezier(0.16, 1, 0.3, 1);
   z-index: 1040;
 }
 
-.history-sidebar.collapsed {
-  margin-left: -260px;
+.claude-sidebar.collapsed {
+  margin-left: -280px;
 }
 
-.btn-new-chat {
-  background-color: var(--card-bg);
-  border: 1px solid var(--card-border);
-  border-radius: 10px;
-  font-size: 0.875rem;
+.btn-claude-new-chat {
+  background-color: var(--claude-card);
+  color: var(--claude-text);
+  border: 1px solid var(--claude-card-border);
+  border-radius: 12px;
+  font-size: 0.975rem; /* ~15.6px */
   font-weight: 500;
-  padding: 8px 14px;
-  color: var(--bs-body-color);
+  padding: 10px 16px;
   transition: all 0.15s ease;
 }
 
-.btn-new-chat:hover {
-  background-color: #e4ebe3;
-  color: var(--primary-green);
+.btn-claude-new-chat:hover {
+  background-color: var(--claude-hover);
+  border-color: var(--claude-accent);
+  color: var(--claude-text);
+  box-shadow: 0 0 14px var(--brand-green-subtle);
 }
 
-.btn-icon-subtle {
-  background: transparent;
-  border: none;
-  color: #6b7280;
-  padding: 6px 10px;
-  border-radius: 8px;
-  transition: background-color 0.15s;
+.sidebar-quick-nav {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
 }
 
-.btn-icon-subtle:hover {
-  background-color: rgba(0, 0, 0, 0.05);
-  color: var(--primary-green);
+.sidebar-nav-item {
+  padding: 9px 12px;
+  border-radius: 10px;
+  font-size: 0.95rem; /* ~15.2px */
+  font-weight: 500;
+  color: var(--claude-text-muted);
+  cursor: pointer;
+  transition: all 0.15s ease;
+  user-select: none;
 }
 
+.sidebar-nav-item:hover,
+.sidebar-nav-item.active {
+  background-color: var(--claude-hover);
+  color: var(--claude-text);
+}
+
+.sidebar-nav-item i {
+  font-size: 1.1rem;
+}
+
+/* Chat History Items */
 .history-item {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 8px 12px;
-  border-radius: 8px;
+  padding: 9px 12px;
+  border-radius: 10px;
   cursor: pointer;
-  font-size: 0.85rem;
-  color: var(--bs-body-color);
-  transition: background-color 0.15s;
+  font-size: 0.95rem; /* ~15.2px */
+  color: var(--claude-text);
+  transition: background-color 0.15s ease, color 0.15s ease;
   text-decoration: none;
 }
 
 .history-item:hover,
 .history-item.active {
-  background-color: #e4ece3;
-  color: var(--primary-green);
+  background-color: var(--claude-hover);
 }
 
-[data-bs-theme="dark"] .history-item:hover,
-[data-bs-theme="dark"] .history-item.active {
-  background-color: #262c28;
+.history-item.active {
+  font-weight: 600;
+  border-left: 3px solid var(--claude-accent);
+}
+
+.history-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background-color: var(--claude-text-muted);
+  flex-shrink: 0;
+}
+
+.history-item.active .history-dot {
+  background-color: var(--claude-accent);
+  box-shadow: 0 0 6px var(--claude-accent);
 }
 
 .history-title {
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  max-width: 170px;
+  max-width: 190px;
 }
 
 .history-delete-btn {
   opacity: 0;
   border: none;
   background: transparent;
-  color: #9ca3af;
-  padding: 0 4px;
+  color: var(--claude-text-muted);
+  padding: 2px 6px;
+  border-radius: 6px;
+  transition: opacity 0.15s, color 0.15s;
 }
 
 .history-item:hover .history-delete-btn {
@@ -141,296 +263,402 @@ body.app-body {
 }
 
 .history-delete-btn:hover {
-  color: #dc2626 !important;
+  color: #ef4444 !important;
+  background-color: rgba(239, 68, 68, 0.1);
 }
 
-.avatar-pill {
-  width: 28px;
-  height: 28px;
+/* User Profile Footer */
+.claude-avatar {
+  width: 32px;
+  height: 32px;
   border-radius: 50%;
+  background-color: var(--brand-green);
+  color: #ffffff;
+  font-weight: 700;
+  font-size: 0.9rem;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 0.85rem;
+  box-shadow: 0 0 10px var(--brand-green-subtle);
+}
+
+.btn-icon-ghost {
+  background: transparent;
+  border: none;
+  color: var(--claude-text-muted);
+  padding: 7px 10px;
+  border-radius: 8px;
+  font-size: 0.95rem;
+  transition: all 0.15s;
+}
+
+.btn-icon-ghost:hover {
+  background-color: var(--claude-hover);
+  color: var(--claude-text);
 }
 
 /* ==========================================================================
-   Header Navigation
+   Main Chat Workspace & Top Bar
    ========================================================================== */
 
-.app-header {
-  background-color: transparent;
+.claude-main-area {
+  background-color: var(--claude-bg);
 }
 
-.brand-title {
-  font-family: var(--font-serif);
+.claude-top-bar {
+  background-color: var(--claude-bg);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+}
+
+.claude-plan-tag {
+  font-size: 0.875rem;
+  color: var(--claude-text-muted);
+}
+
+.attached-docs-pill {
+  background-color: var(--claude-card);
+  border: 1px solid var(--claude-card-border);
+  padding: 6px 14px;
+  border-radius: 24px;
+  font-size: 0.875rem; /* 14px */
+  color: var(--claude-text);
+  max-width: 320px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  transition: all 0.15s ease;
+}
+
+.attached-docs-pill:hover {
+  border-color: var(--claude-accent);
+  background-color: var(--claude-hover);
+}
+
+.claude-pill-badge {
+  background-color: var(--brand-green-subtle);
+  color: var(--brand-green-hover);
+  border: 1px solid var(--brand-green-border);
+  padding: 5px 12px;
+  border-radius: 20px;
+  font-size: 0.85rem;
   font-weight: 600;
-  font-size: 1.85rem;
-  letter-spacing: -0.02em;
-  color: #111827;
 }
 
-[data-bs-theme="dark"] .brand-title {
-  color: #f3f4f6;
-}
-
-/* Stepper */
-.header-stepper {
-  font-size: 0.9rem;
-}
-
-.stepper-item {
-  color: #9ca3af;
-  font-weight: 500;
-}
-
-.stepper-item .step-num {
-  width: 22px;
-  height: 22px;
-  border-radius: 50%;
-  background-color: #e5e7eb;
-  color: #6b7280;
+.claude-model-pill {
+  background-color: var(--claude-card);
+  border: 1px solid var(--claude-card-border);
+  padding: 5px 14px;
+  border-radius: 20px;
+  font-size: 0.85rem;
+  color: var(--claude-text-muted);
   display: inline-flex;
   align-items: center;
-  justify-content: center;
-  font-size: 0.75rem;
-  font-weight: 700;
+  gap: 8px;
 }
 
-.stepper-item.active {
-  color: #111827;
-}
-
-[data-bs-theme="dark"] .stepper-item.active {
-  color: #f3f4f6;
-}
-
-.stepper-item.active .step-num {
-  background-color: var(--primary-green);
-  color: #ffffff;
-}
-
-/* Status Pill */
-.model-status-pill {
-  font-size: 0.825rem;
-  font-weight: 600;
-  color: var(--primary-green);
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-}
-
-.status-dot {
+.status-pulse-dot {
   width: 8px;
   height: 8px;
   border-radius: 50%;
-  background-color: var(--primary-green);
-}
-
-.rate-badge {
-  font-size: 0.75rem;
-  font-weight: 600;
-  padding: 4px 10px;
-  border-radius: 20px;
-  background-color: #e6f3eb;
-  color: var(--primary-green);
-  border: 1px solid #c9e4d2;
+  background-color: #22c55e;
+  box-shadow: 0 0 8px rgba(34, 197, 94, 0.8);
 }
 
 /* ==========================================================================
-   Workspace Cards
+   Center Hero (Large, Crisp & Engaging)
    ========================================================================== */
 
-.source-panel {
-  width: 360px;
-  min-width: 320px;
-  max-width: 400px;
-  border-radius: 20px !important;
-  background-color: var(--card-bg) !important;
-  border: 1px solid var(--card-border) !important;
+.claude-hero {
+  max-width: 720px;
+  transition: opacity 0.3s ease;
 }
 
-.chat-panel {
-  border-radius: 20px !important;
-  background-color: var(--card-bg) !important;
-  border: 1px solid var(--card-border) !important;
+.claude-hero-title {
+  font-family: var(--claude-font-serif);
+  font-weight: 500;
+  font-size: 2.75rem; /* ~44px */
+  letter-spacing: -0.02em;
+  color: var(--claude-text);
+  line-height: 1.25;
 }
 
-.source-heading {
-  font-family: var(--font-serif);
-  font-weight: 600;
-  font-size: 1.45rem;
-  color: #1f2937;
+.claude-hero-subtitle {
+  font-size: 1.125rem; /* 18px */
+  line-height: 1.6;
+  color: var(--claude-text-muted) !important;
 }
 
-[data-bs-theme="dark"] .source-heading {
-  color: #f3f4f6;
-}
-
-/* Source Dashed Box */
-.source-dropzone {
-  border-color: var(--dashed-border) !important;
-  background-color: var(--dashed-bg);
+/* Ingestion Dropzone */
+.claude-dropzone {
+  background-color: var(--claude-card);
+  border: 1.5px dashed var(--claude-card-border);
+  max-width: 480px;
   cursor: pointer;
   transition: all 0.2s ease;
 }
 
-.source-dropzone:hover,
-.source-dropzone.dragover {
-  border-color: var(--primary-green) !important;
-  background-color: #f0f7f2;
+.claude-dropzone:hover,
+.claude-dropzone.dragover {
+  border-color: var(--claude-accent);
+  background-color: var(--claude-hover);
+  box-shadow: 0 0 20px var(--brand-green-subtle);
 }
 
-.upload-icon-wrapper {
-  color: var(--primary-green);
-  font-size: 1.6rem;
-  line-height: 1;
-}
-
-.drop-primary-text {
-  font-weight: 600;
-  font-size: 0.95rem;
-  color: #1f2937;
-}
-
-[data-bs-theme="dark"] .drop-primary-text {
-  color: #e5e7eb;
-}
-
-.btn-choose-file {
-  background-color: var(--primary-green);
+.btn-claude-primary {
+  background-color: var(--claude-accent);
   color: #ffffff;
   border: none;
-  border-radius: 8px;
+  border-radius: 10px;
   font-weight: 600;
-  font-size: 0.85rem;
-  transition: background-color 0.15s;
+  font-size: 0.95rem;
+  padding: 8px 18px;
+  transition: all 0.15s ease;
 }
 
-.btn-choose-file:hover {
-  background-color: var(--primary-green-hover);
+.btn-claude-primary:hover {
+  background-color: var(--claude-accent-hover);
   color: #ffffff;
+  box-shadow: 0 0 12px var(--brand-green-glow);
 }
 
-.drop-hint-text {
-  color: #9ca3af;
-  font-size: 0.75rem;
-  letter-spacing: 0.02em;
+.upload-progress-box {
+  background-color: var(--claude-card);
+  border: 1px solid var(--claude-card-border);
 }
 
 /* ==========================================================================
-   Chat Messages & Bubbles
+   Chat Messages & Editorial Typography (Highly Legible)
    ========================================================================== */
 
-.bubble-user {
-  background-color: var(--user-bubble-bg);
-  color: var(--user-bubble-text);
-  border-radius: 18px;
-  padding: 10px 18px;
-  max-width: 80%;
-  font-size: 0.95rem;
-  word-break: break-word;
-  white-space: pre-wrap;
-  align-self: flex-end;
+/* Full-width scroll container - Eliminates mid-screen gap/vertical line */
+.chat-scroll-area {
+  width: 100%;
+  height: 100%;
+  overflow-y: auto;
+  overflow-x: hidden;
 }
 
-.bubble-ai {
-  background-color: var(--ai-bubble-bg);
-  color: var(--ai-bubble-text);
-  border-radius: 18px;
-  padding: 12px 18px;
-  max-width: 85%;
-  font-size: 0.95rem;
-  word-break: break-word;
-  align-self: flex-start;
-  border: 1px solid var(--card-border);
+.claude-messages-container {
+  max-width: 860px;
+  width: 100%;
+  margin: 0 auto;
 }
 
 .user-msg-row {
   display: flex;
   justify-content: flex-end;
-  margin-bottom: 1rem;
+  margin-bottom: 1.75rem;
 }
 
 .ai-msg-row {
   display: flex;
   flex-direction: column;
   align-items: flex-start;
+  margin-bottom: 2.25rem;
+}
+
+.claude-bubble-user {
+  background-color: var(--claude-user-bubble);
+  color: var(--claude-text);
+  border: 1px solid var(--claude-card-border);
+  border-radius: 20px;
+  padding: 12px 22px;
+  max-width: 82%;
+  font-size: 1.05rem; /* ~16.8px */
+  line-height: 1.6;
+  word-break: break-word;
+  white-space: pre-wrap;
+}
+
+.claude-bubble-ai {
+  background-color: transparent;
+  color: var(--claude-text);
+  max-width: 100%;
+  width: 100%;
+  font-size: 1.1rem; /* ~17.6px: easy on the eyes */
+  line-height: 1.75;
+  word-break: break-word;
+}
+
+.claude-bubble-ai p {
   margin-bottom: 1rem;
 }
 
-.bubble-ai p:last-child {
+.claude-bubble-ai p:last-child {
   margin-bottom: 0;
 }
 
-/* Suggestion Chips */
-.btn-chip {
-  background-color: var(--card-bg);
-  border: 1px solid #d1d5db;
+.ai-meta-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 14px;
+  padding-top: 10px;
+  border-top: 1px solid var(--claude-card-border);
+}
+
+.provider-badge {
+  font-size: 0.825rem;
+  font-weight: 600;
+  padding: 3px 10px;
+  border-radius: 14px;
+  background-color: var(--claude-card);
+  border: 1px solid var(--claude-card-border);
+  color: var(--claude-text-muted);
+}
+
+.provider-badge.groq {
+  color: #22c55e;
+  border-color: rgba(34, 197, 94, 0.4);
+  background-color: rgba(34, 197, 94, 0.08);
+}
+
+.provider-badge.gemini {
+  color: #38bdf8;
+  border-color: rgba(56, 189, 248, 0.4);
+  background-color: rgba(56, 189, 248, 0.08);
+}
+
+/* Citations & Sources Accordion */
+.sources-toggle-btn {
+  background: transparent;
+  border: none;
+  font-size: 0.9rem; /* 14.4px */
+  color: var(--claude-text-muted);
+  cursor: pointer;
+  padding: 6px 0;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  transition: color 0.15s ease;
+}
+
+.sources-toggle-btn:hover {
+  color: var(--claude-accent);
+}
+
+.sources-drawer {
+  background-color: var(--claude-card);
+  border: 1px solid var(--claude-card-border);
+  border-radius: 14px;
+  padding: 14px 16px;
+  margin-top: 8px;
+  font-size: 0.925rem;
+}
+
+.source-chunk-card {
+  border-bottom: 1px solid var(--claude-card-border);
+  padding-bottom: 10px;
+  margin-bottom: 10px;
+}
+
+.source-chunk-card:last-child {
+  border-bottom: none;
+  padding-bottom: 0;
+  margin-bottom: 0;
+}
+
+/* ==========================================================================
+   Bottom Floating Prompt Box (Comfortable Input Size)
+   ========================================================================== */
+
+.claude-input-container {
+  background-color: transparent;
+}
+
+.claude-input-wrapper {
+  max-width: 800px;
+  width: 100%;
+}
+
+.btn-claude-chip {
+  background-color: var(--claude-card);
+  color: var(--claude-text-muted);
+  border: 1px solid var(--claude-card-border);
   border-radius: 20px;
-  font-size: 0.8rem;
-  font-weight: 500;
-  padding: 4px 14px;
-  color: #4b5563;
-  transition: all 0.15s;
+  font-size: 0.85rem; /* ~13.6px */
+  padding: 5px 14px;
+  transition: all 0.15s ease;
 }
 
-.btn-chip:hover {
-  border-color: var(--primary-green);
-  color: var(--primary-green);
-  background-color: #f0f7f2;
+.btn-claude-chip:hover {
+  background-color: var(--claude-hover);
+  border-color: var(--claude-accent);
+  color: var(--claude-text);
+  box-shadow: 0 0 10px var(--brand-green-subtle);
 }
 
-/* Input Form */
-.chat-input-form {
-  border-radius: 12px;
+.claude-prompt-card {
+  background-color: var(--claude-card);
+  border: 1.5px solid var(--claude-card-border);
+  border-radius: 22px !important;
+  box-shadow: 0 6px 24px rgba(0, 0, 0, 0.35);
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
 }
 
-.chat-input-field {
-  border-radius: 12px !important;
-  border: 1px solid #d1d5db !important;
-  padding: 12px 16px;
-  font-size: 0.95rem;
+.claude-prompt-card:focus-within {
+  border-color: rgba(16, 124, 65, 0.7);
+  box-shadow: 0 6px 28px var(--brand-green-subtle);
+}
+
+.claude-textarea {
+  background: transparent !important;
+  color: var(--claude-text) !important;
   box-shadow: none !important;
+  font-size: 1.05rem; /* ~16.8px: readable & comfortable */
+  padding: 8px 12px;
+  line-height: 1.55;
 }
 
-.chat-input-field:focus {
-  border-color: var(--primary-green) !important;
+.claude-textarea::placeholder {
+  color: var(--claude-text-muted);
+  opacity: 0.75;
 }
 
-.btn-send-arrow {
-  background-color: var(--primary-green);
+.claude-prompt-actions {
+  border-top: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.btn-claude-send {
+  background-color: var(--claude-accent);
   color: #ffffff;
   border: none;
-  width: 34px;
-  height: 34px;
-  border-radius: 8px;
+  width: 36px; /* Slightly larger button */
+  height: 36px;
+  border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: background-color 0.15s;
+  font-size: 1.1rem;
+  transition: background-color 0.15s ease, transform 0.15s ease, box-shadow 0.15s ease;
 }
 
-.btn-send-arrow:hover {
-  background-color: var(--primary-green-hover);
+.btn-claude-send:hover {
+  background-color: var(--claude-accent-hover);
   color: #ffffff;
+  transform: scale(1.05);
+  box-shadow: 0 0 12px var(--brand-green-glow);
 }
 
-.btn-send-arrow:disabled {
-  background-color: #9ca3af;
+.btn-claude-send:disabled {
+  background-color: var(--claude-card-border);
+  color: var(--claude-text-muted);
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
 }
 
-/* Typing Dots */
+/* Typing Indicator */
 .typing-dots {
   display: inline-flex;
   align-items: center;
-  gap: 4px;
+  gap: 5px;
 }
 
 .typing-dots span {
-  width: 6px;
-  height: 6px;
-  background-color: #6b7280;
+  width: 7px;
+  height: 7px;
+  background-color: var(--claude-accent);
   border-radius: 50%;
   animation: bounce 1.4s infinite ease-in-out both;
 }
@@ -443,11 +671,227 @@ body.app-body {
   40% { transform: scale(1); opacity: 1; }
 }
 
-/* Document cards in Left Panel */
-.doc-pill {
-  background-color: var(--dashed-bg);
-  border: 1px solid var(--card-border);
-  border-radius: 8px;
-  padding: 6px 10px;
-  font-size: 0.8rem;
+/* ==========================================================================
+   Enhanced Knowledge Base & Chunks Inspector Modal
+   ========================================================================== */
+
+.kb-doc-item {
+  background-color: var(--claude-card);
+  border: 1px solid var(--claude-card-border);
+  border-radius: 10px;
+  padding: 8px 12px;
+  transition: all 0.15s ease;
 }
+
+.kb-doc-item:hover {
+  background-color: var(--claude-hover);
+  border-color: var(--brand-green-border);
+}
+
+.kb-doc-badge {
+  font-size: 0.75rem; /* ~12px */
+  font-weight: 700;
+  padding: 2px 6px;
+  border-radius: 6px;
+  background-color: var(--brand-green-subtle);
+  color: var(--brand-green-hover);
+  text-transform: uppercase;
+}
+
+.kb-action-btn {
+  background: transparent;
+  border: none;
+  color: var(--claude-text-muted);
+  padding: 4px 6px;
+  border-radius: 6px;
+  font-size: 0.95rem;
+  transition: all 0.15s ease;
+}
+
+.kb-action-btn:hover {
+  color: var(--claude-accent);
+  background-color: rgba(255, 255, 255, 0.06);
+}
+
+.kb-action-btn.delete-btn:hover {
+  color: #ef4444;
+}
+
+/* Claude Modal Styling */
+.claude-modal {
+  background-color: var(--claude-card);
+  color: var(--claude-text);
+  border-radius: 18px !important;
+  border: 1px solid var(--claude-card-border);
+}
+
+.claude-modal .modal-header,
+.claude-modal .modal-footer {
+  border-color: var(--claude-card-border) !important;
+}
+
+.chunk-card {
+  background-color: var(--claude-bg);
+  border: 1px solid var(--claude-card-border);
+  border-radius: 12px;
+  padding: 14px 16px;
+  margin-bottom: 12px;
+}
+
+.chunk-card:last-child {
+  margin-bottom: 0;
+}
+
+.chunk-content-text {
+  font-family: var(--bs-font-monospace);
+  font-size: 0.9rem; /* ~14.4px */
+  line-height: 1.6;
+  color: var(--claude-text);
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+/* In-Chat Ingestion Notice Card */
+.doc-ingested-card {
+  background-color: var(--claude-card);
+  border: 1px solid var(--claude-card-border);
+  border-radius: 14px;
+  padding: 14px 18px;
+  margin-bottom: 1.75rem;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+/* Scrollbars */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.12);
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.22);
+}
+
+/* ==========================================================================
+   User Profile Footer & Settings Modal Enhancements
+   ========================================================================== */
+
+.user-footer-btn {
+  padding: 5px 8px;
+  border-radius: 10px;
+  transition: background-color 0.15s ease;
+}
+
+.user-footer-btn:hover {
+  background-color: var(--claude-hover);
+}
+
+.profile-name {
+  font-size: 0.975rem;
+  font-weight: 600;
+  color: var(--claude-text);
+  letter-spacing: -0.01em;
+}
+
+.profile-role {
+  font-size: 0.8rem;
+  color: var(--claude-text-muted);
+}
+
+.settings-tab-btn {
+  background: transparent !important;
+  color: var(--claude-text-muted) !important;
+  border: 1px solid transparent !important;
+  border-radius: 10px !important;
+  font-size: 0.925rem !important;
+  font-weight: 500 !important;
+  padding: 8px 16px !important;
+  transition: all 0.15s ease !important;
+}
+
+.settings-tab-btn:hover {
+  color: var(--claude-text) !important;
+  background-color: var(--claude-hover) !important;
+}
+
+.settings-tab-btn.active {
+  background-color: var(--brand-green-subtle) !important;
+  color: var(--claude-accent) !important;
+  border-color: var(--brand-green-border) !important;
+  font-weight: 600 !important;
+}
+
+/* Claude Modal Contrast & Visibility Enhancements */
+.claude-modal {
+  background-color: var(--claude-card) !important;
+  color: var(--claude-text) !important;
+  border-radius: 18px !important;
+  border: 1px solid var(--claude-card-border) !important;
+}
+
+.claude-modal .modal-header,
+.claude-modal .modal-footer,
+.claude-modal .border-bottom,
+.claude-modal .border-top {
+  border-color: var(--claude-card-border) !important;
+}
+
+.claude-modal .modal-title,
+.claude-modal .fw-semibold {
+  color: var(--claude-text) !important;
+}
+
+.claude-modal .text-secondary {
+  color: var(--claude-text-muted) !important;
+}
+
+.settings-card-bg {
+  background-color: var(--claude-hover) !important;
+  border: 1px solid var(--claude-card-border) !important;
+}
+
+.btn-theme-option {
+  background: var(--claude-card);
+  border: 1.5px solid var(--claude-card-border);
+  border-radius: 14px;
+  color: var(--claude-text) !important;
+  transition: all 0.2s ease;
+}
+
+.btn-theme-option .fw-semibold {
+  color: var(--claude-text) !important;
+}
+
+.btn-theme-option .xx-small {
+  color: var(--claude-text-muted) !important;
+}
+
+.btn-theme-option:hover {
+  border-color: var(--claude-accent);
+  background: var(--claude-hover);
+}
+
+.btn-theme-option.active {
+  border-color: var(--claude-accent) !important;
+  background: var(--brand-green-subtle) !important;
+  box-shadow: 0 0 16px var(--brand-green-subtle);
+}
+
+/* Form Switches in Settings */
+.form-check-input:checked {
+  background-color: var(--claude-accent);
+  border-color: var(--claude-accent);
+}
+
+.form-check-input:focus {
+  border-color: var(--claude-accent);
+  box-shadow: 0 0 0 0.25rem var(--brand-green-subtle);
+}
+

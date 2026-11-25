@@ -37,10 +37,11 @@ router.post('/chat/reset-limit', (req, res) => {
  */
 router.post('/chat', rateLimiterMiddleware, async (req, res, next) => {
   try {
-    const { query, history = [], sessionId } = req.body;
+    const rawQuery = req.body.query || req.body.question || req.body.message || '';
+    const { history = [], sessionId } = req.body;
 
     // Validate query
-    if (!query || typeof query !== 'string' || !query.trim()) {
+    if (!rawQuery || typeof rawQuery !== 'string' || !rawQuery.trim()) {
       return res.status(400).json({
         success: false,
         error: 'Query parameter cannot be empty.',
@@ -50,7 +51,7 @@ router.post('/chat', rateLimiterMiddleware, async (req, res, next) => {
     const currentSessionId = req.headers['x-session-id'] || sessionId;
 
     const result = await queryRAG({
-      query: query.trim(),
+      query: rawQuery.trim(),
       history,
       sessionId: currentSessionId,
       k: 4,

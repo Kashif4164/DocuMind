@@ -10,6 +10,7 @@ import { fileURLToPath } from 'url';
 import uploadRoutes from './src/routes/upload.js';
 import chatRoutes from './src/routes/chat.js';
 import docsRoutes from './src/routes/docs.js';
+import authRoutes from './src/routes/auth.js';
 import { errorHandler } from './src/middleware/errorHandler.js';
 
 const __filename = fileURLToPath(import.meta.url);
@@ -30,6 +31,32 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use('/api', uploadRoutes);
 app.use('/api', chatRoutes);
 app.use('/api', docsRoutes);
+app.use('/api/auth', authRoutes);
+
+// Explicit HTML Page Routes
+app.get('/signin', (req, res) => {
+  res.sendFile(path.join(__dirname, 'public', 'signin.html'));
+});
+
+app.get('/login', (req, res) => {
+  res.redirect('/signin');
+});
+
+app.get('/signup', (req, res) => {
+  res.sendFile(path.join(__dirname, 'public', 'signup.html'));
+});
+
+app.get('/register', (req, res) => {
+  res.redirect('/signup');
+});
+
+app.get('/chat', (req, res) => {
+  res.sendFile(path.join(__dirname, 'public', 'index.html'));
+});
+
+app.get('/', (req, res) => {
+  res.sendFile(path.join(__dirname, 'public', 'index.html'));
+});
 
 // Fallback to index.html for SPA-style routing if needed
 app.use((req, res, next) => {

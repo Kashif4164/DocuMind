@@ -229,6 +229,21 @@ export class MemoryVectorStore {
   }
 
   /**
+   * Retrieve chunks for a specific document for inspection/preview
+   * @param {string} filename
+   */
+  getChunksByFilename(filename) {
+    return this.memoryVectors
+      .filter((entry) => entry.metadata?.source === filename)
+      .map((entry, idx) => ({
+        index: idx + 1,
+        content: entry.content,
+        metadata: entry.metadata,
+        wordCount: (entry.content.match(/\S+/g) || []).length,
+      }));
+  }
+
+  /**
    * Clear all documents from vector store
    */
   clear() {

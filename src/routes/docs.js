@@ -62,6 +62,25 @@ router.delete('/docs/:filename', (req, res) => {
 });
 
 /**
+ * GET /api/docs/:filename/chunks
+ * Inspect chunks of a specific document
+ */
+router.get('/docs/:filename/chunks', (req, res) => {
+  const sessionId = req.headers['x-session-id'] || req.query.sessionId;
+  const store = getSessionVectorStore(sessionId);
+  const { filename } = req.params;
+
+  const chunks = store.getChunksByFilename ? store.getChunksByFilename(filename) : [];
+
+  res.status(200).json({
+    success: true,
+    filename,
+    totalChunks: chunks.length,
+    chunks,
+  });
+});
+
+/**
  * GET /api/status
  * Server health check and API key readiness
  */
