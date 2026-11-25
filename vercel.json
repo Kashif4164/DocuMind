@@ -1,12 +1,12 @@
 {
   "version": 2,
   "rewrites": [
-    { "source": "/", "destination": "/index.html" },
-    { "source": "/chat", "destination": "/index.html" },
+    { "source": "/api/(.*)", "destination": "/api/server" },
     { "source": "/signin", "destination": "/signin.html" },
     { "source": "/signup", "destination": "/signup.html" },
     { "source": "/login", "destination": "/signin.html" },
     { "source": "/register", "destination": "/signup.html" },
-    { "source": "/api/(.*)", "destination": "/api" }
+    { "source": "/chat", "destination": "/index.html" },
+    { "source": "/", "destination": "/index.html" }
   ]
 }
