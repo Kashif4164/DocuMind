@@ -694,7 +694,11 @@ async function submitUserQuery() {
   if (STATE.isGenerating) return;
 
   const query = (dom.queryInput ? dom.queryInput.value : '').trim();
-  if (!query) return;
+  if (!query) {
+    showToast('Please enter a question before sending.', 'error');
+    if (dom.queryInput) dom.queryInput.focus();
+    return;
+  }
 
   // Auto-generate session title if first message
   const session = getActiveSession();

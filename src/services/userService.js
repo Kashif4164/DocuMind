@@ -1,11 +1,16 @@
 import fs from 'fs';
 import path from 'path';
 import crypto from 'crypto';
+import os from 'os';
 import { fileURLToPath } from 'url';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
-const DATA_FILE = path.join(__dirname, '../../data/users.json');
+
+const isServerless = !!(process.env.VERCEL || process.env.AWS_LAMBDA_FUNCTION_NAME || process.env.NOW_REGION);
+const DATA_FILE = isServerless
+  ? path.join(os.tmpdir(), 'documind-users.json')
+  : path.join(__dirname, '../../data/users.json');
 
 // In-memory cache + persistent JSON storage
 let users = [];

@@ -144,13 +144,13 @@ export async function queryRAG({ query, history = [], sessionId, k = 7 }) {
   // Fix 1: Pass 'model' explicitly with fallback so it can NEVER be missing
   const groqKey = process.env.GROQ_API_KEY;
   if (groqKey && groqKey.trim() !== '') {
-    const model = process.env.GROQ_MODEL || 'llama-3.3-70b-versatile';
+    const model = process.env.GROQ_MODEL || 'openai/gpt-oss-120b';
     candidates.push({
       name: 'Groq',
       llm: new ChatGroq({
         apiKey: groqKey.trim(),
-        model: model,       // Fix 1: ChatGroq expects 'model'
-        modelName: model,   // Set both for total safety
+        model: model,
+        modelName: model,
         temperature: 0.2,
         maxRetries: 1,
       }),

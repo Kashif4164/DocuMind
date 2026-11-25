@@ -1,12 +1,19 @@
 import multer from 'multer';
 import path from 'path';
 import fs from 'fs';
+import os from 'os';
 
-const uploadsDir = path.resolve('uploads');
+// Determine writable temporary upload folder (handles serverless read-only filesystems)
+const isServerless = !!(process.env.VERCEL || process.env.AWS_LAMBDA_FUNCTION_NAME || process.env.NOW_REGION);
+const uploadsDir = isServerless ? path.join(os.tmpdir(), 'documind-uploads') : path.resolve('uploads');
 
 // Ensure uploads folder exists
-if (!fs.existsSync(uploadsDir)) {
-  fs.mkdirSync(uploadsDir, { recursive: true });
+try {
+  if (!fs.existsSync(uploadsDir)) {
+    fs.mkdirSync(uploadsDir, { recursive: true });
+  }
+} catch (err) {
+  console.warn('[Multer] Warning creating uploads directory:', err.message);
 }
 
 // Disk storage with unique temporary file names

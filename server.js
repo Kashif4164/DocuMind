@@ -66,16 +66,25 @@ app.use((req, res, next) => {
   res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
 
+// Health check route for cloud deployment monitors (Render, Railway, Fly, AWS)
+app.get(['/health', '/api/health'], (req, res) => {
+  res.status(200).json({ status: 'ok', uptime: process.uptime(), timestamp: new Date().toISOString() });
+});
+
 // Central Error Handler
 app.use(errorHandler);
 
-// Start server
-app.listen(PORT, () => {
-  console.log(`=======================================================`);
-  console.log(` 🚀 DoucuMind - RAG Document Chatbot Server`);
-  console.log(` 🌐 URL: http://localhost:${PORT}`);
-  const active = process.env.OPENAI_API_KEY ? 'OpenAI' : (process.env.GOOGLE_API_KEY ? 'Gemini' : 'Local');
-  console.log(` 🔑 Active Provider: ${active}`);
-  console.log(` 🧠 Embeddings: ${process.env.OPENAI_EMBEDDING_MODEL || process.env.GEMINI_EMBEDDING_MODEL || 'local'}`);
-  console.log(`=======================================================`);
-});
+// Start server (Only listen directly if not running in a serverless environment like Vercel)
+if (!process.env.VERCEL) {
+  app.listen(PORT, '0.0.0.0', () => {
+    console.log(`=======================================================`);
+    console.log(` 🚀 DoucuMind - RAG Document Chatbot Server`);
+    console.log(` 🌐 URL: http://0.0.0.0:${PORT}`);
+    const active = process.env.GROQ_API_KEY ? 'Groq' : (process.env.OPENAI_API_KEY ? 'OpenAI' : (process.env.GOOGLE_API_KEY ? 'Gemini' : 'Local'));
+    console.log(` 🔑 Active Provider: ${active}`);
+    console.log(` 🧠 Embeddings: ${process.env.OPENAI_EMBEDDING_MODEL || process.env.GEMINI_EMBEDDING_MODEL || 'local'}`);
+    console.log(`=======================================================`);
+  });
+}
+
+export default app;
