@@ -1,4 +1,4 @@
-<<<<<<< HEAD
+
 # DoucuMind - RAG Document Chatbot
 
 DoucuMind is a high-performance RAG (Retrieval-Augmented Generation) document chatbot built with **Node.js, Express, LangChain.js, OpenAI, and Google Gemini**. It enables users to upload multi-format documents (PDF, DOCX, CSV, TXT) and interactively query them with strict, hallucination-free answers backed by exact source citations and page numbers.
@@ -93,22 +93,7 @@ cd DoucuMind
 npm install
 ```
 
-### 3. Environment Configuration
-Create or edit your `.env` file in the root directory:
-```env
-PORT=3000
 
-# Your Google Gemini API Key from https://aistudio.google.com/
-GOOGLE_API_KEY=your_actual_gemini_api_key_here
-
-# LLM Model (Free tier)
-GEMINI_MODEL=gemini-1.5-flash
-
-# Embeddings Model
-GEMINI_EMBEDDING_MODEL=text-embedding-004
-```
-
-> **Note:** If `GOOGLE_API_KEY` is not provided, DoucuMind falls back to a deterministic local keyless vectorizer and extracts matching excerpts directly for queries so you can inspect retrieved document chunks offline!
 
 ### 4. Run the Application
 Start the server:
