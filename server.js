@@ -41,11 +41,16 @@ app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 // Serve frontend static assets
 app.use(express.static(path.join(__dirname, 'public')));
 
-// Mount API routes
+// Mount API routes (Support both with and without /api prefix for serverless compatibility)
 app.use('/api', uploadRoutes);
 app.use('/api', chatRoutes);
 app.use('/api', docsRoutes);
 app.use('/api/auth', authRoutes);
+
+app.use(uploadRoutes);
+app.use(chatRoutes);
+app.use(docsRoutes);
+app.use('/auth', authRoutes);
 
 // Health check route for cloud deployment monitors (Render, Railway, Fly, AWS, Vercel)
 app.get(['/health', '/api/health'], (req, res) => {
@@ -62,7 +67,7 @@ app.get('/', (req, res) => safeSendFile(res, 'public/index.html'));
 
 // Fallback to index.html for SPA-style routing if needed
 app.use((req, res, next) => {
-  if (req.path.startsWith('/api')) {
+  if (req.path.startsWith('/api') || req.path.startsWith('/auth')) {
     return next();
   }
   safeSendFile(res, 'public/index.html');
@@ -71,8 +76,17 @@ app.use((req, res, next) => {
 // Central Error Handler
 app.use(errorHandler);
 
-// Start server (Only listen directly if not running in a serverless environment like Vercel)
-if (!process.env.VERCEL) {
+// Start server (Only when running directly as a standalone process e.g. node server.js)
+const isServerless = !!(
+  process.env.VERCEL ||
+  process.env.VERCEL_ENV ||
+  process.env.AWS_REGION ||
+  process.env.LAMBDA_TASK_ROOT ||
+  process.env.AWS_EXECUTION_ENV
+);
+const isDirectRun = process.argv[1] && (process.argv[1].endsWith('server.js') || process.argv[1].endsWith('server'));
+
+if (!isServerless && isDirectRun) {
   app.listen(PORT, '0.0.0.0', () => {
     console.log(`=======================================================`);
     console.log(` 🚀 DoucuMind - RAG Document Chatbot Server`);
