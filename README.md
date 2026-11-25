@@ -1,7 +1,9 @@
 <<<<<<< HEAD
 # DoucuMind - RAG Document Chatbot
 
-DoucuMind is a high-performance, 100% free-tier RAG (Retrieval-Augmented Generation) document chatbot built with **Node.js, Express, LangChain.js, and Google Gemini**. It enables users to upload multi-format documents (PDF, DOCX, CSV, TXT) and interactively query them with strict, hallucination-free answers backed by exact source citations and page numbers.
+DoucuMind is a high-performance RAG (Retrieval-Augmented Generation) document chatbot built with **Node.js, Express, LangChain.js, OpenAI, and Google Gemini**. It enables users to upload multi-format documents (PDF, DOCX, CSV, TXT) and interactively query them with strict, hallucination-free answers backed by exact source citations and page numbers.
+
+Supports **Groq** (`llama-3.3-70b-versatile`) as **Primary**, **Google Gemini** (`gemini-1.5-flash`) as **Backup**, with an automatic failover queue, a **15-question session rate limiter**, and **100% offline keyless local embeddings**.
 
 ---
 

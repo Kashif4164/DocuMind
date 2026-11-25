@@ -8,10 +8,17 @@ export async function withRetry(fn, { maxRetries = 3, baseDelayMs = 1500, label 
       return await fn();
     } catch (err) {
       attempt++;
-      const isRateLimit = err.status === 429 || 
+      const msg = err.message?.toLowerCase() || '';
+      const isZeroCredits = msg.includes('no credits remaining') || 
+                            msg.includes('insufficient_quota') ||
+                            msg.includes('billing') ||
+                            msg.includes('api_key_invalid') ||
+                            msg.includes('api key not valid');
+
+      const isRateLimit = (err.status === 429 || 
                           err.message?.includes('429') || 
-                          err.message?.toLowerCase().includes('resource has been exhausted') ||
-                          err.message?.toLowerCase().includes('rate limit');
+                          msg.includes('resource has been exhausted') ||
+                          msg.includes('rate limit')) && !isZeroCredits;
 
       if (attempt > maxRetries || !isRateLimit) {
         throw err;

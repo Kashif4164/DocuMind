@@ -1,4 +1,5 @@
 import { GoogleGenerativeAIEmbeddings } from '@langchain/google-genai';
+import { OpenAIEmbeddings } from '@langchain/openai';
 import { withRetry } from '../utils/retry.js';
 
 /**
@@ -80,6 +81,13 @@ class LocalKeylessEmbeddings {
 }
 
 /**
+ * Checks if a string looks like an official Google AI Studio Gemini API key
+ */
+export function isValidGoogleApiKey(key) {
+  return typeof key === 'string' && key.trim().startsWith('AIza');
+}
+
+/**
  * In-Memory Vector Store
  * Supports adding documents with metadata, similarity search with scores,
  * listing stored documents, deleting by filename, and clearing.
@@ -104,11 +112,18 @@ export class MemoryVectorStore {
       const batch = documents.slice(i, i + batchSize);
       const texts = batch.map((doc) => doc.pageContent);
 
-      // Embed batch with retry
-      const vectors = await withRetry(
-        () => this.embeddings.embedDocuments(texts),
-        { label: `embedding batch ${Math.floor(i / batchSize) + 1} of ${Math.ceil(total / batchSize)}` }
-      );
+      // Embed batch with retry or graceful local fallback
+      let vectors;
+      try {
+        vectors = await withRetry(
+          () => this.embeddings.embedDocuments(texts),
+          { label: `embedding batch ${Math.floor(i / batchSize) + 1} of ${Math.ceil(total / batchSize)}` }
+        );
+      } catch (err) {
+        console.warn(`[VectorStore] External embedding provider failed (${err.message}). Falling back to local keyless embeddings.`);
+        this.embeddings = new LocalKeylessEmbeddings();
+        vectors = await this.embeddings.embedDocuments(texts);
+      }
 
       for (let j = 0; j < batch.length; j++) {
         const doc = batch[j];
@@ -138,23 +153,45 @@ export class MemoryVectorStore {
   }
 
   /**
-   * Similarity search returning top-k matching documents
+   * Similarity search returning top-k matching documents with hybrid keyword boost
    * @param {string} query
    * @param {number} k
    * @returns {Promise<Array<{pageContent: string, metadata: object, score: number}>>}
    */
-  async similaritySearchWithScore(query, k = 4) {
+  async similaritySearchWithScore(query, k = 7) {
     if (this.memoryVectors.length === 0) {
       return [];
     }
 
-    const queryEmbedding = await withRetry(
-      () => this.embeddings.embedQuery(query),
-      { label: 'query embedding' }
-    );
+    let queryEmbedding;
+    try {
+      queryEmbedding = await withRetry(
+        () => this.embeddings.embedQuery(query),
+        { label: 'query embedding' }
+      );
+    } catch (err) {
+      console.warn(`[VectorStore] External query embedding failed (${err.message}). Using local embedding engine.`);
+      this.embeddings = new LocalKeylessEmbeddings();
+      queryEmbedding = await this.embeddings.embedQuery(query);
+    }
+
+    // Extract query keywords (3+ chars) for hybrid keyword scoring
+    const queryTerms = query.toLowerCase().match(/\b[a-z0-9_-]{3,}\b/g) || [];
 
     const scored = this.memoryVectors.map((entry) => {
-      const score = cosineSimilarity(queryEmbedding, entry.embedding);
+      const cosine = cosineSimilarity(queryEmbedding, entry.embedding);
+      let keywordBoost = 0;
+      const lowerContent = entry.content.toLowerCase();
+      
+      for (const term of queryTerms) {
+        if (lowerContent.includes(term)) {
+          keywordBoost += 0.06;
+        }
+      }
+
+      // Final score combining dense vector similarity + keyword match boost
+      const score = cosine + Math.min(keywordBoost, 0.30);
+
       return {
         pageContent: entry.content,
         metadata: entry.metadata,
@@ -162,7 +199,7 @@ export class MemoryVectorStore {
       };
     });
 
-    // Sort descending by similarity score
+    // Sort descending by final score
     scored.sort((a, b) => b.score - a.score);
     return scored.slice(0, k);
   }
@@ -170,7 +207,7 @@ export class MemoryVectorStore {
   /**
    * Simple similarity search returning documents
    */
-  async similaritySearch(query, k = 4) {
+  async similaritySearch(query, k = 7) {
     const results = await this.similaritySearchWithScore(query, k);
     return results.map((r) => ({
       pageContent: r.pageContent,
@@ -215,18 +252,41 @@ export class MemoryVectorStore {
 }
 
 /**
- * Factory for creating configured embeddings
+ * Factory for creating configured embeddings (supports OpenAI, Gemini, and Local)
  */
 export function createEmbeddings() {
-  const apiKey = process.env.GOOGLE_API_KEY;
-  if (!apiKey || apiKey === 'your_gemini_api_key_here' || apiKey.trim() === '') {
-    console.warn('[VectorStore] No GOOGLE_API_KEY found in environment. Using local keyless embedding fallback.');
+  const openaiKey = process.env.OPENAI_API_KEY;
+  const openaiModel = process.env.OPENAI_EMBEDDING_MODEL;
+
+  if (openaiModel === 'local') {
+    console.log('[VectorStore] Using local keyless embedding engine for documents.');
     return new LocalKeylessEmbeddings();
   }
 
+  if (openaiKey && openaiKey.trim().startsWith('sk-')) {
+    const model = openaiModel || 'text-embedding-3-small';
+    console.log(`[VectorStore] Using OpenAI Embeddings (${model}).`);
+    return new OpenAIEmbeddings({
+      apiKey: openaiKey.trim(),
+      modelName: model,
+    });
+  }
+
+  const geminiKey = process.env.GOOGLE_API_KEY;
+  const embeddingModel = process.env.GEMINI_EMBEDDING_MODEL;
+
+  if (embeddingModel === 'local' || !geminiKey || geminiKey === 'your_gemini_api_key_here' || geminiKey.trim() === '') {
+    console.warn('[VectorStore] Using local keyless embedding engine.');
+    return new LocalKeylessEmbeddings();
+  }
+
+  if (!isValidGoogleApiKey(geminiKey)) {
+    console.warn(`[VectorStore] Warning: GOOGLE_API_KEY does not start with "AIzaSy". Found prefix "${geminiKey.slice(0, 6)}...".`);
+  }
+
   return new GoogleGenerativeAIEmbeddings({
-    apiKey,
-    modelName: process.env.GEMINI_EMBEDDING_MODEL || 'text-embedding-004',
+    apiKey: geminiKey,
+    modelName: embeddingModel || 'text-embedding-004',
   });
 }
 

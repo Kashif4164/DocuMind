@@ -1,4 +1,7 @@
 import 'dotenv/config';
+import dotenv from 'dotenv';
+dotenv.config({ path: '.env.local' });
+dotenv.config();
 import express from 'express';
 import cors from 'cors';
 import path from 'path';
@@ -44,6 +47,8 @@ app.listen(PORT, () => {
   console.log(`=======================================================`);
   console.log(` 🚀 DoucuMind - RAG Document Chatbot Server`);
   console.log(` 🌐 URL: http://localhost:${PORT}`);
-  console.log(` 🔑 Google API Key configured: ${Boolean(process.env.GOOGLE_API_KEY && process.env.GOOGLE_API_KEY !== 'your_gemini_api_key_here')}`);
+  const active = process.env.OPENAI_API_KEY ? 'OpenAI' : (process.env.GOOGLE_API_KEY ? 'Gemini' : 'Local');
+  console.log(` 🔑 Active Provider: ${active}`);
+  console.log(` 🧠 Embeddings: ${process.env.OPENAI_EMBEDDING_MODEL || process.env.GEMINI_EMBEDDING_MODEL || 'local'}`);
   console.log(`=======================================================`);
 });

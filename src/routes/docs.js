@@ -1,5 +1,6 @@
 import express from 'express';
 import { getSessionVectorStore } from '../services/vectorStore.js';
+import { resetRateLimit } from '../middleware/rateLimiter.js';
 
 const router = express.Router();
 
@@ -24,13 +25,14 @@ router.get('/docs', (req, res) => {
 
 /**
  * DELETE /api/docs
- * Reset/wipe the vector store (clear all documents)
+ * Reset/wipe the vector store (clear all documents) and reset rate limit
  */
 router.delete('/docs', (req, res) => {
   const sessionId = req.headers['x-session-id'] || req.body?.sessionId;
   const store = getSessionVectorStore(sessionId);
 
   store.clear();
+  resetRateLimit(sessionId);
 
   res.status(200).json({
     success: true,
@@ -64,15 +66,34 @@ router.delete('/docs/:filename', (req, res) => {
  * Server health check and API key readiness
  */
 router.get('/status', (req, res) => {
-  const apiKey = process.env.GOOGLE_API_KEY;
-  const hasKey = Boolean(apiKey && apiKey !== 'your_gemini_api_key_here' && apiKey.trim() !== '');
+  const groqKey = process.env.GROQ_API_KEY;
+  const grokKey = process.env.GROK_API_KEY || process.env.XAI_API_KEY;
+  const geminiKey = process.env.GOOGLE_API_KEY;
+  const openaiKey = process.env.OPENAI_API_KEY;
+
+  const isGroq = Boolean(groqKey && groqKey.trim() !== '');
+  const isGrok = Boolean(grokKey && grokKey.trim() !== '');
+  const isGemini = Boolean(geminiKey && geminiKey.trim().startsWith('AIza'));
+  const isOpenAi = Boolean(openaiKey && openaiKey.trim().startsWith('sk-'));
+
+  let primary = 'Local Excerpts';
+  if (isGroq) primary = `Groq (${process.env.GROQ_MODEL || 'llama-3.3-70b'})`;
+  else if (isGrok) primary = `xAI Grok (${process.env.GROK_MODEL || 'grok-beta'})`;
+  else if (isOpenAi) primary = `OpenAI (${process.env.OPENAI_MODEL || 'gpt-4o-mini'})`;
+
+  let backup = isGemini ? `Gemini (${process.env.GEMINI_MODEL || 'gemini-1.5-flash'})` : null;
 
   res.status(200).json({
     status: 'online',
-    googleApiKeyConfigured: hasKey,
-    geminiModel: process.env.GEMINI_MODEL || 'gemini-1.5-flash',
-    embeddingModel: process.env.GEMINI_EMBEDDING_MODEL || 'text-embedding-004',
+    primary,
+    backup,
+    isGroqConfigured: isGroq,
+    isGrokConfigured: isGrok,
+    isGeminiConfigured: isGemini,
+    isOpenAiConfigured: isOpenAi,
+    embeddingModel: process.env.OPENAI_EMBEDDING_MODEL || process.env.GEMINI_EMBEDDING_MODEL || 'local',
   });
 });
 
 export default router;
+
